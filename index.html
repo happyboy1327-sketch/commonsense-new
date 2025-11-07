@@ -4,67 +4,50 @@
 <meta charset="UTF-8">
 <title>상식 퀴즈</title>
 <style>
+  /* 전체 박스 계산 포함 */
+  * { box-sizing: border-box; }
+
   body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 15px;
-    width: 100%;
-    min-height: 100vh;
-    box-sizing: border-box;
-    background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
-    color: #111;
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f0f0, #d0d0d0);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
   }
+
   h1 { text-align: center; margin-bottom: 20px; }
 
-  .quiz-box {
-    padding: 15px;
-    background: rgba(255,255,255,0.7);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    margin-bottom: 15px;
-    width: 100%;
-    box-sizing: border-box;
-    background-clip: padding-box;
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding-box;
-  }
+  .quiz-box { font-size: 1.1rem; margin-bottom: 20px; }
+
   .options button {
     display: block;
     margin: 8px 0;
     padding: 12px;
     width: 100%;
     font-size: 1rem;
+    border-radius: 8px;
     border: none;
-    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    background-color: #ccc;
-    color: #111;
+    transition: all 0.2s;
   }
-  .options button.correct { background-color: #4CAF50; color: #fff; }
-  .options button.wrong { background-color: #F44336; color: #fff; }
-  .options button:disabled { cursor: default; opacity: 0.8; }
+
+  button.correct { background-color: #8BC34A; color: #fff; }
+  button.wrong { background-color: #F06292; color: #fff; }
+
   .explanation { margin-top: 12px; font-style: italic; color: #333; }
-  .timer { font-weight: bold; color: #d32f2f; margin-bottom: 12px; font-size: 1.2rem; text-align: center; }
-  button#nextBtn, button#reviewBtn {
-    padding: 12px;
-    width: 100%;
-    margin-top: 10px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background: linear-gradient(90deg, #2196F3, #21CBF3);
-    color: #fff;
-    transition: all 0.3s ease;
-  }
-  button#nextBtn.hidden { display: none; }
-  @media(max-width: 300px){
-    .quiz-box { padding: 12px; }
-    .options button { padding: 12px; font-size: 0.95rem; }
-    button#nextBtn, button#reviewBtn { padding: 11px; font-size: 0.95rem; }
-    .timer { font-size: 1rem; }
+
+  .timer { font-weight: bold; color: red; margin-bottom: 10px; text-align: center; }
+
+  .hidden { display: none; }
+
+  @media (max-width: 330px) {
+    body { padding: 15px; }
+    .options button { padding: 16px; font-size: 1.2rem; }
+    .quiz-box { font-size: 1.2rem; }
+    .explanation { font-size: 1rem; }
+    .timer { font-size: 1.3rem; }
   }
 </style>
 </head>
