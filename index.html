@@ -4,120 +4,67 @@
 <meta charset="UTF-8">
 <title>상식 퀴즈</title>
 <style>
-  /* 전체 페이지 */
   body {
     font-family: Arial, sans-serif;
     max-width: 600px;
     margin: auto;
     padding: 20px;
     background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
-    background-clip: padding-box;       /* 표준 속성 */
-    -webkit-background-clip: padding-box; /* 크로미움 계열 */
-    -moz-background-clip: padding-box;    /* Firefox */
+    background-clip: padding-box;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
     box-sizing: border-box;
     color: #111;
   }
 
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 1.8rem;
-    color: #222;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  .quiz-box, .explanation {
+    background: rgba(255, 255, 255, 0.6);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background-clip: padding-box;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+    filter: alpha(opacity=60);
   }
-
-  .quiz-box {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);         /* 크로미움 계열 */
-  -webkit-backdrop-filter: blur(10px); /* 사파리 */
-  background-clip: padding-box;        /* 표준 */
-  -webkit-background-clip: padding-box;/* 크로미움/사파리 */
-  -moz-background-clip: padding-box;   /* Firefox */
-  border-radius: 12px;
-}
 
   .options button {
     display: block;
     margin: 8px 0;
     padding: 12px;
     width: 100%;
-    font-size: 1rem;
-    border-radius: 10px;
     border: none;
+    border-radius: 10px;
+    font-size: 1rem;
     cursor: pointer;
-    background: linear-gradient(90deg, #6a11cb, #2575fc);
-    color: #fff;
-    transition: all 0.2s ease-in-out;
-    -webkit-appearance: none;
-    appearance: none;
+    background: linear-gradient(135deg, #6fb1fc, #4364f7);
+    color: white;
+    transition: background 0.3s, transform 0.2s;
   }
 
   .options button:hover {
-    transform: scale(1.03);
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #4364f7, #6fb1fc);
   }
-
-  .options button.correct {
-    background-color: #4caf50 !important;
-    color: #fff;
-  }
-
-  .options button.wrong {
-    background-color: #e91e63 !important;
-    color: #fff;
-  }
-
-  .explanation {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(10px);         /* 크로미움 계열 */
-    -webkit-backdrop-filter: blur(10px); /* 사파리 */
-    background-clip: padding-box;        /* 표준 */
-    -webkit-background-clip: padding-box;/* 크로미움/사파리 */
-    -moz-background-clip: padding-box;   /* Firefox */
-    border-radius: 12px;
-}
 
   .timer {
     font-weight: bold;
     color: red;
-    margin-bottom: 10px;
-    font-size: 1.2rem;
-    text-align: center;
-  }
-
-  #nextBtn, #reviewBtn {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    font-size: 1rem;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    background: linear-gradient(90deg, #ff8a00, #e52e71);
-    color: #fff;
-    transition: all 0.2s ease-in-out;
-    -webkit-appearance: none;
-    appearance: none;
-  }
-
-  #nextBtn:hover, #reviewBtn:hover {
-    transform: scale(1.03);
+    margin-bottom: 12px;
   }
 
   .hidden { display: none; }
 
-  /* 모바일 대응 */
   @media (max-width: 480px) {
     body { padding: 10px; }
-    h1 { font-size: 1.5rem; }
-    .quiz-box { font-size: 1rem; padding: 12px; }
-    .options button { font-size: 1.1rem; padding: 10px; }
-    #nextBtn, #reviewBtn { font-size: 1.1rem; padding: 10px; }
-    .timer { font-size: 1rem; }
+    .quiz-box, .explanation { padding: 10px; font-size: 0.9rem; }
+    .options button { padding: 10px; font-size: 0.9rem; }
+    .timer { font-size: 1.1rem; }
   }
 </style>
-</head>
-<body>
 
 <h1>상식 퀴즈</h1>
 <div id="wrongCount">오답: 0</div>
