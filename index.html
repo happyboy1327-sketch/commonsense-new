@@ -8,64 +8,62 @@
     font-family: Arial, sans-serif;
     max-width: 600px;
     margin: auto;
-    padding: 20px;
+    padding: 15px;
     background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
-    background-clip: padding-box;
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding-box;
-    box-sizing: border-box;
     color: #111;
   }
-
-  .quiz-box, .explanation {
-    background: rgba(255, 255, 255, 0.6);
+  h1 { text-align: center; margin-bottom: 20px; }
+  .quiz-box {
+    padding: 15px;
+    background: rgba(255,255,255,0.7);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
+    border-radius: 15px;
+    margin-bottom: 15px;
     background-clip: padding-box;
     -webkit-background-clip: padding-box;
     -moz-background-clip: padding-box;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 15px;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
-    filter: alpha(opacity=60);
   }
-
   .options button {
     display: block;
     margin: 8px 0;
     padding: 12px;
     width: 100%;
+    font-size: 1rem;
     border: none;
     border-radius: 10px;
-    font-size: 1rem;
     cursor: pointer;
-    background: linear-gradient(135deg, #6fb1fc, #4364f7);
-    color: white;
-    transition: background 0.3s, transform 0.2s;
+    transition: all 0.3s ease;
+    background-color: #ccc;
+    color: #111;
   }
-
-  .options button:hover {
-    transform: translateY(-2px);
-    background: linear-gradient(135deg, #4364f7, #6fb1fc);
+  .options button.correct { background-color: #4CAF50; color: #fff; }
+  .options button.wrong { background-color: #F44336; color: #fff; }
+  .options button:disabled { cursor: default; opacity: 0.8; }
+  .explanation { margin-top: 12px; font-style: italic; color: #333; }
+  .timer { font-weight: bold; color: #d32f2f; margin-bottom: 12px; font-size: 1.2rem; text-align: center; }
+  button#nextBtn, button#reviewBtn {
+    padding: 12px;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #2196F3, #21CBF3);
+    color: #fff;
+    transition: all 0.3s ease;
   }
-
-  .timer {
-    font-weight: bold;
-    color: red;
-    margin-bottom: 12px;
-  }
-
-  .hidden { display: none; }
-
-  @media (max-width: 480px) {
-    body { padding: 10px; }
-    .quiz-box, .explanation { padding: 10px; font-size: 0.9rem; }
-    .options button { padding: 10px; font-size: 0.9rem; }
-    .timer { font-size: 1.1rem; }
+  button#nextBtn.hidden { display: none; }
+  @media(max-width: 520px){
+    .quiz-box { padding: 12px; }
+    .options button { padding: 10px; font-size: 0.95rem; }
+    button#nextBtn, button#reviewBtn { padding: 10px; font-size: 0.95rem; }
+    .timer { font-size: 1rem; }
   }
 </style>
-
+</head>
+<body>
 <h1>상식 퀴즈</h1>
 <div id="wrongCount">오답: 0</div>
 <div class="timer" id="timer">12</div>
