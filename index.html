@@ -6,13 +6,16 @@
 <style>
   body {
     font-family: Arial, sans-serif;
-    max-width: 600px;
-    margin: auto;
+    margin: 0;
     padding: 15px;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
     background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
     color: #111;
   }
   h1 { text-align: center; margin-bottom: 20px; }
+
   .quiz-box {
     padding: 15px;
     background: rgba(255,255,255,0.7);
@@ -20,6 +23,8 @@
     backdrop-filter: blur(10px);
     border-radius: 15px;
     margin-bottom: 15px;
+    width: 100%;
+    box-sizing: border-box;
     background-clip: padding-box;
     -webkit-background-clip: padding-box;
     -moz-background-clip: padding-box;
@@ -55,10 +60,10 @@
     transition: all 0.3s ease;
   }
   button#nextBtn.hidden { display: none; }
-  @media(max-width: 520px){
+  @media(max-width: 300px){
     .quiz-box { padding: 12px; }
-    .options button { padding: 10px; font-size: 0.95rem; }
-    button#nextBtn, button#reviewBtn { padding: 10px; font-size: 0.95rem; }
+    .options button { padding: 12px; font-size: 0.95rem; }
+    button#nextBtn, button#reviewBtn { padding: 11px; font-size: 0.95rem; }
     .timer { font-size: 1rem; }
   }
 </style>
