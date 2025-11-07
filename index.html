@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>상식 퀴즈</title>
+<style>
+  /* 전체 페이지 */
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+    background-clip: padding-box;       /* 표준 속성 */
+    -webkit-background-clip: padding-box; /* 크로미움 계열 */
+    -moz-background-clip: padding-box;    /* Firefox */
+    box-sizing: border-box;
+    color: #111;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #222;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  }
+
+  .quiz-box {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);         /* 크로미움 계열 */
+  -webkit-backdrop-filter: blur(10px); /* 사파리 */
+  background-clip: padding-box;        /* 표준 */
+  -webkit-background-clip: padding-box;/* 크로미움/사파리 */
+  -moz-background-clip: padding-box;   /* Firefox */
+  border-radius: 12px;
+}
+
+  .options button {
+    display: block;
+    margin: 8px 0;
+    padding: 12px;
+    width: 100%;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+    color: #fff;
+    transition: all 0.2s ease-in-out;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .options button:hover {
+    transform: scale(1.03);
+  }
+
+  .options button.correct {
+    background-color: #4caf50 !important;
+    color: #fff;
+  }
+
+  .options button.wrong {
+    background-color: #e91e63 !important;
+    color: #fff;
+  }
+
+  .explanation {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);         /* 크로미움 계열 */
+    -webkit-backdrop-filter: blur(10px); /* 사파리 */
+    background-clip: padding-box;        /* 표준 */
+    -webkit-background-clip: padding-box;/* 크로미움/사파리 */
+    -moz-background-clip: padding-box;   /* Firefox */
+    border-radius: 12px;
+}
+
+  .timer {
+    font-weight: bold;
+    color: red;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  #nextBtn, #reviewBtn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(90deg, #ff8a00, #e52e71);
+    color: #fff;
+    transition: all 0.2s ease-in-out;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  #nextBtn:hover, #reviewBtn:hover {
+    transform: scale(1.03);
+  }
+
+  .hidden { display: none; }
+
+  /* 모바일 대응 */
+  @media (max-width: 480px) {
+    body { padding: 10px; }
+    h1 { font-size: 1.5rem; }
+    .quiz-box { font-size: 1rem; padding: 12px; }
+    .options button { font-size: 1.1rem; padding: 10px; }
+    #nextBtn, #reviewBtn { font-size: 1.1rem; padding: 10px; }
+    .timer { font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>상식 퀴즈</h1>
+<div id="wrongCount">오답: 0</div>
+<div class="timer" id="timer">12</div>
+<div class="quiz-box" id="quizBox"></div>
+<div class="options" id="options"></div>
+<div class="explanation" id="explanation"></div>
+<button id="nextBtn" class="hidden">다음 문제</button>
+<hr>
+<button id="reviewBtn">오답 복습</button>
+
+<script>
+// 초기 문제 배열
+let quizzes = [
+  { question: '사계절 중 가장 추운 계절은 무엇일까요?', options: ['봄','여름','가을','겨울'], answer: 3, explanation: '겨울은 태양과의 거리가 상대적으로 멀고, 지구의 기울기로 인해 태양광이 적게 도달하므로 가장 추운 계절입니다.' },
+  { question: '태양계의 중심에 있는 항성은 무엇일까요?', options: ['지구','달','화성','태양'], answer: 3, explanation: '태양계의 중심에는 태양이 있으며, 중력으로 행성들이 공전하고 있습니다.' },
+  { question: '사계절 중 가장 추운 계절은 무엇일까요?', options: ['봄','여름','가을','겨울'], answer: 3, explanation: '겨울은 태양광이 적게 도달하고 기온이 낮아 가장 추운 계절입니다.' },
+  { question: '르네상스 시대의 대표적인 화가로 "모나리자"를 그린 사람은 누구일까요?', options: ['빈센트 반 고흐','레오나르도 다빈치','파블로 피카소','클로드 모네'], answer: 1, explanation: '레오나르도 다빈치(1452~1519)는 르네상스 시대의 대표적 화가이자 발명가로, 그의 대표작 "모나리자"는 세계적으로 유명하며 프랑스 루브르 박물관에 전시되어 있습니다.' },
+  { question: '중국의 만리장성은 무엇을 막기 위해 건설되었을까요?', options: ['자연재해', '이민자 유입', '북방 민족의 침입', '무역선 출입'], answer: 2, explanation: '만리장성은 고대 중국 여러 왕조가 북방 민족, 특히 흉노와 같은 유목민의 침입을 방어하기 위해 건설한 장대한 방어 시설입니다. 길이는 약 2만 km에 달합니다.' },
+  { question: '노벨상을 수여하는 나라는 어디일까요?', options: ['미국', '영국', '스웨덴', '프랑스'], answer: 2, explanation: '노벨상은 스웨덴의 과학자 알프레드 노벨의 유언에 따라 스웨덴 왕립 과학원과 노르웨이 노벨위원회가 분야별로 수여하며, 물리학, 화학, 생리의학, 문학, 평화, 경제학 분야가 있습니다.' },
+  { question: '인체의 뼈 중 가장 긴 뼈는 무엇일까요?', options: ['쇄골', '경골', '대퇴골', '척추'], answer: 2, explanation: '대퇴골(Femur)은 허벅지에 위치하며, 인체에서 가장 크고 긴 뼈입니다. 체중을 지탱하고 이동에 중요한 역할을 합니다.' },
+  { question: '셰익스피어의 4대 비극에 해당하지 않는 작품은 무엇일까요?', options: ['햄릿', '리어왕', '로미오와 줄리엣', '맥베스'], answer: 2, explanation: '셰익스피어의 4대 비극은 "햄릿", "오셀로", "리어왕", "맥베스"입니다. "로미오와 줄리엣"은 청소년 비극으로 분류되며 4대 비극에는 포함되지 않습니다.' },
+  { question: '양자역학에서 불확정성 원리를 제안한 과학자는 누구일까요?', options: ['아인슈타인','보어','하이젠베르크','슈뢰딩거'], answer: 2, explanation: '베르너 하이젠베르크는 1927년 불확정성 원리를 제안하였으며, 이는 위치와 운동량을 동시에 정확히 측정할 수 없다는 양자역학의 근본 원리를 설명합니다.' },
+  { question: '파리 기후변화협정이 채택된 연도는?', options: ['2012년', '2015년', '2018년', '2021년'], answer: 1, explanation: '파리 협정(Paris Agreement)은 2015년 12월 프랑스 파리에서 열린 제21차 유엔 기후변화협약 당사국총회(COP21)에서 채택되었으며, 전 세계 온실가스 감축 목표를 규정했습니다.' },
+  { question: '미국의 초대 대통령은 누구일까요?', options: ['토머스 제퍼슨', '존 애덤스', '조지 워싱턴', '에이브러햄 링컨'], answer: 2, explanation: '조지 워싱턴(1732~1799)은 미국의 독립전쟁 영웅이자 초대 대통령으로, 1789년부터 1797년까지 재임하며 미국의 기초 헌법과 정부 시스템을 세웠습니다.' },
+  { question: '지구 자기장의 역전 주기는 평균적으로 얼마일까요?', options: ['수백 년', '수만 년', '수십만 년', '수백만 년'], answer: 2, explanation: '지구 자기장은 불규칙하게 역전되며, 평균적으로 약 수십만 년마다 한 번 발생합니다. 최근 역전은 약 78만 년 전에 발생했습니다.' },
+  { question: '주식 시장에서 "블루칩"이란 무엇을 의미할까요?', options: ['갓 상장된 주식', '가격 변동성이 큰 주식', '대형 우량주', 'IT 관련 기술주'], answer: 2, explanation: '블루칩(Blue Chip)은 재무 안정성과 시장 점유율이 높은 대형 우량 기업의 주식을 의미하며, 일반적으로 장기 투자에 적합합니다.' },
+  { question: '독일의 통일을 상징하는 문은 무엇일까요?', options: ['개선문', '브란덴부르크 문', '콜로세움', '베를린 장벽'], answer: 1, explanation: '브란덴부르크 문(Brandenburger Tor)은 베를린에 위치하며, 독일 분단과 통일을 상징하는 역사적 건축물입니다.' },
+  { question: '러시아의 수도는?', options: ['상트페테르부르크', '키이우', '모스크바', '민스크'], answer: 2, explanation: '러시아 연방의 수도는 모스크바이며, 정치, 경제, 문화의 중심지입니다.' },
+  { question: '세포의 에너지 생산 공장이라고 불리는 것은?', options: ['핵', '리보솜', '미토콘드리아', '엽록체'], answer: 2, explanation: '미토콘드리아는 세포 내에서 ATP를 생성하는 소기관으로, 에너지를 생산해 세포 활동을 지원합니다.' },
+  { question: '고대 로마의 율리우스 카이사르가 남긴 유명한 말 "왔노라, 보았노라, 이겼노라"의 라틴어 원문은 무엇일까요?', options: ['Carpe Diem', 'Veni, Vidi, Vici', 'Alea iacta est', 'Et tu, Brute?'], answer: 1, explanation: '"Veni, Vidi, Vici"(왔노라, 보았노라, 이겼노라)는 기원전 47년 카이사르가 젤라 전투 승리 후 로마로 보낸 보고서에서 사용한 문구입니다.' },
+  { question: '경제학에서 "보이지 않는 손" 개념을 제시한 학자는 누구일까요?', options: ['존 메이너드 케인스', '칼 마르크스', '애덤 스미스', '밀턴 프리드먼'], answer: 2, explanation: '애덤 스미스(Adam Smith)는 "국부론"에서 시장이 개인의 이기심에 의해 조정된다는 "보이지 않는 손" 개념을 처음 제시했습니다.' },
+  { question: '1905년 아인슈타인이 발표한 논문들에 포함되지 않는 주제는 무엇일까요?', options: ['광전 효과', '브라운 운동', '특수 상대성 이론', '양자장 이론'], answer: 3, explanation: '아인슈타인의 1905년 논문(Annus Mirabilis Papers)은 광전 효과, 브라운 운동, 특수 상대성 이론, 질량-에너지 등가성(E=mc²)을 다루었으며, 양자장 이론은 이후 발전한 개념입니다.' },
+  { question: '프랑스 혁명의 구호 "자유, 평등, 박애" 중 "박애"는 프랑스어로?', options: ['Liberté', 'Égalité', 'Fraternité', 'Justice'], answer: 2, explanation: '프랑스 혁명의 구호는 "Liberté(자유), Égalité(평등), Fraternité(박애)"이며, "박애"는 Fraternité에 해당합니다.' },
+  { question: '전자기학의 기초가 되는 4가지 방정식을 완성한 과학자는 누구일까요?', options: ['마이클 패러데이', '제임스 클러크 맥스웰', '니콜라 테슬라', '앙드레 마리 앙페르'], answer: 1, explanation: '제임스 클러크 맥스웰(James Clerk Maxwell)은 전자기 현상을 통합적으로 설명하는 맥스웰 방정식을 완성했습니다.' },
+  { question: '헤밍웨이의 소설 "노인과 바다"의 배경이 되는 나라는?', options: ['스페인', '미국', '쿠바', '멕시코'], answer: 2, explanation: '"노인과 바다"는 쿠바를 배경으로 하며, 주인공 산티아고는 쿠바 해안에서 조업합니다.' },
+  { question: '국제 표준화 기구(ISO)의 약자는 어느 나라의 언어에서 유래했을까요?', options: ['영어', '프랑스어', '그리스어', '라틴어'], answer: 2, explanation: 'ISO는 International Organization for Standardization의 약자이지만, 이름은 그리스어 "isos"(동일하다)에서 유래했습니다.' },
+  { question: '별의 밝기를 나타내는 등급 체계에서 숫자가 낮을수록 더 밝습니다. 이 체계를 만든 고대 그리스 천문학자는?', options: ['프톨레마이오스', '히파르코스', '유클리드', '아리스토텔레스'], answer: 1, explanation: '히파르코스(Hipparchus)는 별의 밝기를 6등급으로 나누는 최초의 성표를 작성했습니다. 숫자가 낮을수록 더 밝은 별을 의미합니다.' },
+  { question: '철학자 니체가 "신은 죽었다"라고 선언한 주요 저서는 무엇일까요?', options: ['도덕의 계보', '차라투스트라는 이렇게 말했다', '선악의 저편', '인간적인, 너무나 인간적인'], answer: 1, explanation: '"차라투스트라는 이렇게 말했다"에서 니체는 "신은 죽었다" 선언을 통해 서구 사회 가치의 근본 붕괴를 알렸습니다.' }
+];
+
+// localStorage 관리
+const STORAGE_KEY = 'quizState_v2';
+let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+  allQuizzes: [...quizzes],
+  wrongs: [],
+  newQuizDate: null,
+  wrongCount: 0
+};
+
+// 요소
+const quizBox = document.getElementById('quizBox');
+const optionsDiv = document.getElementById('options');
+const explanationDiv = document.getElementById('explanation');
+const nextBtn = document.getElementById('nextBtn');
+const timerDiv = document.getElementById('timer');
+const reviewBtn = document.getElementById('reviewBtn');
+const wrongCountDiv = document.getElementById('wrongCount');
+
+let currentQuiz, timer, timeLeft;
+let quizOrder = [], quizIndex = 0;
+let reviewMode = false;
+let reviewOrder = [], reviewIndex = 0;
+
+// 하루 신규문제 자동 추가
+function addDailyNewQuizzes() {
+  const today = new Date().toISOString().slice(0,10);
+  if(state.newQuizDate === today) return;
+  for(let i=0;i<5;i++){
+    state.allQuizzes.push({
+      question: `신규 문제 ${i+1}`,
+      options: ['보기1','보기2','보기3','보기4'],
+      answer: Math.floor(Math.random()*4),
+      explanation: '자동 생성된 신규 문제입니다.'
+    });
+  }
+  state.newQuizDate = today;
+  saveState();
+}
+
+// 저장
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  // 항상 state.wrongs.length 사용
+  wrongCountDiv.textContent = `오답: ${state.wrongs.length}`;
+}
+
+// 문제 랜덤 순서 생성
+function shuffleQuizzes(pool) {
+  let arr = [...pool];
+  for(let i=arr.length-1;i>0;i--){
+    let j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+// 문제 표시
+function showQuiz(quiz) {
+  currentQuiz = quiz;
+  quizBox.textContent = quiz.question;
+  optionsDiv.innerHTML = '';
+  explanationDiv.textContent = '';
+  nextBtn.classList.add('hidden');
+
+  quiz.options.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.textContent = opt;
+    btn.onclick = ()=>checkAnswer(i,btn);
+    optionsDiv.appendChild(btn);
+  });
+
+  timeLeft = 12;
+  timerDiv.textContent = timeLeft;
+  clearInterval(timer);
+  timer = setInterval(()=>{
+    timeLeft--;
+    timerDiv.textContent = timeLeft;
+    if(timeLeft <=0){
+      clearInterval(timer);
+      checkAnswer(-1,null);
+    }
+  },1000);
+}
+
+// 정답 확인
+function checkAnswer(selected, btn) {
+  clearInterval(timer);
+  optionsDiv.querySelectorAll('button').forEach((b,i)=>{
+    b.disabled = true;
+    if(i===currentQuiz.answer) b.classList.add('correct');
+    else if(i===selected && selected!==currentQuiz.answer) b.classList.add('wrong');
+  });
+
+  const correct = selected === currentQuiz.answer;
+  if(!correct){
+    if(!state.wrongs.find(q=>q.question===currentQuiz.question)){
+      state.wrongs.push(currentQuiz);
+    }
+  }
+
+  explanationDiv.textContent = `정답: ${currentQuiz.options[currentQuiz.answer]}\n${currentQuiz.explanation}`;
+  saveState(); // wrongCountDiv는 항상 length 기준
+  nextBtn.classList.remove('hidden');
+}
+
+// 다음 문제
+nextBtn.onclick = ()=>{
+  if(reviewMode){
+    reviewIndex++;
+    if(reviewIndex >= reviewOrder.length){
+      alert('오답 복습을 완료했습니다!');
+      reviewMode = false;
+      quizIndex = 0;
+      quizOrder = shuffleQuizzes(state.allQuizzes);
+      showQuiz(quizOrder[quizIndex]);
+    } else {
+      showQuiz(reviewOrder[reviewIndex]);
+    }
+  } else {
+    quizIndex++;
+    if(quizIndex >= quizOrder.length){
+      alert('모든 문제를 완료했습니다!');
+      quizIndex = 0;
+      quizOrder = shuffleQuizzes(state.allQuizzes);
+      showQuiz(quizOrder[quizIndex]);
+    } else {
+      showQuiz(quizOrder[quizIndex]);
+    }
+  }
+};
+
+// 오답 복습
+reviewBtn.onclick = ()=>{
+  if(state.wrongs.length===0){
+    alert('오답이 없습니다.');
+    return;
+  }
+  reviewMode = true;
+  reviewOrder = shuffleQuizzes(state.wrongs);
+  reviewIndex = 0;
+  showQuiz(reviewOrder[reviewIndex]);
+};
+
+// 초기 실행
+addDailyNewQuizzes();
+quizOrder = shuffleQuizzes(state.allQuizzes);
+showQuiz(quizOrder[quizIndex]);
+saveState();
+</script>
+</body>
+</html>
+
+
+
